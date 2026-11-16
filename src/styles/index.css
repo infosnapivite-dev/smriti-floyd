@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Infant:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600;1,700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    font-variant-numeric: lining-nums;
+    font-feature-settings: "lnum" 1;
+  }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    color: #f7f4ee;
+    background-color: #070406;
+  }
+
+  h1, h2, h3, .font-serif {
+    font-family: 'Cormorant Infant', 'Cormorant Garamond', Georgia, serif;
+    font-variant-numeric: lining-nums;
+    font-feature-settings: "lnum" 1;
+  }
+
+  .font-cormorant-infant {
+    font-family: 'Cormorant Infant', Georgia, serif;
+    font-variant-numeric: lining-nums;
+    font-feature-settings: "lnum" 1;
+  }
+
+  /* Dedicated Luxury Numeral Typography */
+  .font-numbers,
+  .font-num {
+    font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+    font-variant-numeric: lining-nums tabular-nums;
+    font-feature-settings: "lnum" 1, "tnum" 1;
+  }
+
+  .font-script, .font-great-vibes {
+    font-family: 'Great Vibes', cursive;
+  }
+}
