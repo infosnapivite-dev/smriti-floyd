@@ -13,9 +13,6 @@ export default function HomePage({ isEnvelopeOpen = true, isOpeningStarted = fal
     if (!video) return;
 
     if (isEnvelopeOpen || isOpeningStarted) {
-      // Reset and trigger auto-play once envelope starts opening
-      setShowContent(true);
-
       const playPromise = video.play();
       if (playPromise !== undefined) {
         playPromise
@@ -27,6 +24,17 @@ export default function HomePage({ isEnvelopeOpen = true, isOpeningStarted = fal
             video.muted = true;
             video.play().then(() => setHasPlayed(true)).catch((e) => console.log(e));
           });
+      }
+
+      // If already open (e.g. replay or loaded opened), show immediately
+      if (isEnvelopeOpen) {
+        setShowContent(true);
+      } else {
+        // Reveal text gracefully as the bottom envelope slides down
+        const timer = setTimeout(() => {
+          setShowContent(true);
+        }, 2000);
+        return () => clearTimeout(timer);
       }
     } else {
       // When envelope is closed / replayed, pause and rewind
@@ -64,7 +72,7 @@ export default function HomePage({ isEnvelopeOpen = true, isOpeningStarted = fal
         <motion.h1
           initial={{ opacity: 0, y: 16 }}
           animate={showContent ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
-          transition={{ duration: 1.0, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
           className="font-script text-4xl sm:text-5xl md:text-6xl text-[#9b6a38] leading-none mb-1.5"
           style={{ fontFamily: "'Great Vibes', cursive" }}
         >
@@ -75,7 +83,7 @@ export default function HomePage({ isEnvelopeOpen = true, isOpeningStarted = fal
         <motion.p 
           initial={{ opacity: 0, y: 14 }}
           animate={showContent ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
-          transition={{ duration: 0.9, delay: 0.65, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.85, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
           className="font-serif text-xs sm:text-[13px] text-[#183654] tracking-wide mb-1.5 leading-snug"
         >
           invite you to celebrate their beautiful beginning
@@ -85,7 +93,7 @@ export default function HomePage({ isEnvelopeOpen = true, isOpeningStarted = fal
         <motion.img
           initial={{ opacity: 0, scale: 0.9 }}
           animate={showContent ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
-          transition={{ duration: 0.85, delay: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.8, delay: 0.52, ease: [0.22, 1, 0.36, 1] }}
           src={deviderImg}
           alt="Divider"
           className="w-24 sm:w-28 object-contain my-1 pointer-events-none"
@@ -95,7 +103,7 @@ export default function HomePage({ isEnvelopeOpen = true, isOpeningStarted = fal
         <motion.p 
           initial={{ opacity: 0, y: 12 }}
           animate={showContent ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
-          transition={{ duration: 0.9, delay: 1.15, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.85, delay: 0.72, ease: [0.22, 1, 0.36, 1] }}
           className="font-serif text-sm sm:text-base md:text-lg font-medium text-[#183654] tracking-[0.1em] mt-1 mb-0.5 leading-tight"
         >
           <span className="font-numbers">18</span><sup className="text-[10px] lowercase font-normal align-super ml-0.5 mr-1">th</sup>– <span className="font-numbers">20</span><sup className="text-[10px] lowercase font-normal align-super ml-0.5 mr-1">th</sup> January, <span className="font-numbers">2027</span>
@@ -105,7 +113,7 @@ export default function HomePage({ isEnvelopeOpen = true, isOpeningStarted = fal
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={showContent ? { opacity: 1, y: 0 } : { opacity: 0, y: 12 }}
-          transition={{ duration: 0.9, delay: 1.35, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.85, delay: 0.92, ease: [0.22, 1, 0.36, 1] }}
           className="leading-tight"
         >
           <p className="font-serif italic text-xs text-[#183654] my-0.5">at</p>
@@ -125,7 +133,7 @@ export default function HomePage({ isEnvelopeOpen = true, isOpeningStarted = fal
           showContent
             ? {
                 opacity: 1,
-                transition: { duration: 0.8, delay: 1.6, ease: 'easeOut' },
+                transition: { duration: 0.8, delay: 1.15, ease: 'easeOut' },
               }
             : { opacity: 0 }
         }

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Pointer } from 'lucide-react';
 import upperFlapImg from '../../assets/1-envelope-upper-flap.webp';
 import remainingImg from '../../assets/1-envelope-remaining.webp';
 import envelopeSealImg from '../../assets/first page - envelope seal.webp';
@@ -22,12 +23,12 @@ export default function EnvelopeOpening({ onOpenStart, onOpenComplete }) {
       onOpenStart();
     }
 
-    // Gentle blend time so the bottom part blends slowly and gracefully
+    // Slide down time for bottom envelope to smoothly slide off-screen (slowed down for tactile grace)
     setTimeout(() => {
       if (onOpenComplete) {
         onOpenComplete();
       }
-    }, 2400);
+    }, 4600);
   };
 
   return (
@@ -48,22 +49,22 @@ export default function EnvelopeOpening({ onOpenStart, onOpenComplete }) {
         className="relative w-full aspect-[888/1600] flex items-center justify-center scale-[1.05]"
         style={{ perspective: 1800 }}
       >
-        {/* Layer 1: Bottom Remaining Envelope Card (Holds solid while flap opens, then blends slowly) */}
+        {/* Layer 1: Bottom Remaining Envelope Card (Slides down slowly to reveal HomePage without blending/blur) */}
         <motion.div
           className="absolute inset-0 w-full h-full z-10 pointer-events-none"
-          initial={{ opacity: 1, scale: 1.045, filter: 'blur(0px)' }}
+          initial={{ y: '0%', opacity: 1, scale: 1.045 }}
           animate={
             isOpening
               ? {
-                  opacity: [1, 1, 0.85, 0.4, 0],
-                  scale: [1.045, 1.045, 1.055, 1.07, 1.085],
-                  filter: ['blur(0px)', 'blur(0px)', 'blur(0px)', 'blur(2px)', 'blur(6px)'],
+                  y: ['0%', '0%', '115%'],
+                  opacity: [1, 1, 1, 0],
+                  scale: 1.045,
                 }
-              : { opacity: 1, scale: 1.045, filter: 'blur(0px)' }
+              : { y: '0%', opacity: 1, scale: 1.045 }
           }
           transition={{
-            duration: 2.3,
-            times: [0, 0.45, 0.7, 0.88, 1],
+            duration: 4.6,
+            times: [0, 0.15, 0.96, 1],
             ease: [0.25, 0.1, 0.25, 1],
           }}
         >
@@ -89,13 +90,12 @@ export default function EnvelopeOpening({ onOpenStart, onOpenComplete }) {
                   // Positive rotateX brings the flap tip forward towards the viewer (front side opening)
                   rotateX: [0, 50, 110, 180],
                   opacity: [1, 1, 0.8, 0],
-                  scale: [1.045, 1.055, 1.07, 1.09],
-                  filter: ['blur(0px)', 'blur(0px)', 'blur(1.5px)', 'blur(6px)'],
+                  scale: 1.045,
                 }
               : { rotateX: 0, opacity: 1, scale: 1.045 }
           }
           transition={{
-            duration: 1.8,
+            duration: 1.6,
             times: [0, 0.35, 0.7, 1],
             ease: [0.25, 0.1, 0.25, 1],
           }}
@@ -117,7 +117,7 @@ export default function EnvelopeOpening({ onOpenStart, onOpenComplete }) {
           }}
         >
           <motion.div
-            className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full cursor-pointer drop-shadow-xl"
+            className="envelope-wax-seal rounded-full cursor-pointer drop-shadow-xl"
             initial={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
             animate={
               isOpening
@@ -141,9 +141,10 @@ export default function EnvelopeOpening({ onOpenStart, onOpenComplete }) {
           </motion.div>
         </div>
 
-        {/* Layer 4: Compact Elegant Pill "CLICK TO OPEN" Button */}
+        {/* Layer 4: Compact Elegant Pill "CLICK TO OPEN" Button with Hand Icon */}
         <div
-          className="absolute inset-x-0 bottom-[7.5%] z-30 pointer-events-auto flex justify-center items-center"
+          className="absolute inset-x-0 z-30 pointer-events-auto flex flex-col items-center justify-center cursor-pointer select-none"
+          style={{ bottom: 'calc(5.5% + 50px)' }}
         >
           <motion.div
             initial={{ opacity: 1, y: 0 }}
@@ -153,13 +154,29 @@ export default function EnvelopeOpening({ onOpenStart, onOpenComplete }) {
                 : { opacity: 1, y: 0 }
             }
             transition={{ duration: 0.45, ease: 'easeOut' }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-5 py-1.5 sm:px-6 sm:py-2 rounded-full border border-[#9b6a38]/85 bg-[#f4ece1]/85 backdrop-blur-[2px] shadow-sm hover:bg-[#9b6a38]/10 transition-colors duration-200 cursor-pointer whitespace-nowrap flex items-center justify-center text-center"
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.96 }}
+            className="flex flex-col items-center justify-center gap-2 cursor-pointer"
           >
-            <span className="font-['Cinzel',serif] text-[10.5px] sm:text-[11.5px] font-medium tracking-[0.2em] text-[#1e3a58] uppercase select-none whitespace-nowrap block leading-none text-center pl-[0.2em]">
-              CLICK TO OPEN
-            </span>
+            {/* Pill Button */}
+            <div className="px-5 py-1.5 sm:px-6 sm:py-2 rounded-full border border-[#9b6a38]/85 bg-[#f4ece1]/85 backdrop-blur-[2px] shadow-sm hover:bg-[#9b6a38]/10 transition-colors duration-200 whitespace-nowrap flex items-center justify-center text-center">
+              <span className="font-['Cinzel',serif] text-[10.5px] sm:text-[11.5px] font-medium tracking-[0.2em] text-[#1e3a58] uppercase select-none whitespace-nowrap block leading-none text-center pl-[0.2em]">
+                CLICK TO OPEN
+              </span>
+            </div>
+
+            {/* Hand Pointer Icon matching reference */}
+            <motion.div
+              animate={{ y: [0, -3.5, 0] }}
+              transition={{
+                duration: 1.6,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
+              className="flex items-center justify-center text-[#4b5563]"
+            >
+              <Pointer className="w-5 h-5 sm:w-6 sm:h-6 drop-shadow-sm" strokeWidth={1.8} />
+            </motion.div>
           </motion.div>
         </div>
       </div>

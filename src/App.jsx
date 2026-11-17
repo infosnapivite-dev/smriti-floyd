@@ -114,9 +114,7 @@ export default function App() {
                 initial={{ opacity: 1 }}
                 exit={{
                   opacity: 0,
-                  scale: 1.04,
-                  filter: 'blur(8px)',
-                  transition: { duration: 0.9, ease: 'easeInOut' }
+                  transition: { duration: 0.35, ease: 'easeOut' }
                 }}
               >
                 <EnvelopeOpening 

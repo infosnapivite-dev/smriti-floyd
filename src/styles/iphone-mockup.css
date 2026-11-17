@@ -253,10 +253,24 @@
   will-change: transform, opacity;
 }
 
+/* Golden Wax Seal Responsive Sizing:
+   - On Desktop Mockup (> 600px): Preserved at original elegant size (104px).
+   - On Actual Mobile Devices (<= 600px): Increased a bit more for a rich tactile seal feel (~124px-134px).
+*/
+.envelope-wax-seal {
+  width: 104px;
+  height: 104px;
+}
+
 /* ==========================================================================
    MOBILE RESPONSIVENESS (Seamless Fullscreen on Actual Phones <= 600px)
    ========================================================================== */
 @media (max-width: 600px) {
+  .envelope-wax-seal {
+    width: clamp(124px, 33vw, 134px);
+    height: clamp(124px, 33vw, 134px);
+  }
+
   .desktop-viewport-container::before,
   .desktop-viewport-container::after {
     display: none;
