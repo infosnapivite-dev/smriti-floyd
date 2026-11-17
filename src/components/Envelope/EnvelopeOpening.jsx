@@ -140,6 +140,28 @@ export default function EnvelopeOpening({ onOpenStart, onOpenComplete }) {
             />
           </motion.div>
         </div>
+
+        {/* Layer 4: Compact Elegant Pill "CLICK TO OPEN" Button */}
+        <div
+          className="absolute inset-x-0 bottom-[7.5%] z-30 pointer-events-auto flex justify-center items-center"
+        >
+          <motion.div
+            initial={{ opacity: 1, y: 0 }}
+            animate={
+              isOpening
+                ? { opacity: 0, y: 10, pointerEvents: 'none' }
+                : { opacity: 1, y: 0 }
+            }
+            transition={{ duration: 0.45, ease: 'easeOut' }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-5 py-1.5 sm:px-6 sm:py-2 rounded-full border border-[#9b6a38]/85 bg-[#f4ece1]/85 backdrop-blur-[2px] shadow-sm hover:bg-[#9b6a38]/10 transition-colors duration-200 cursor-pointer whitespace-nowrap flex items-center justify-center text-center"
+          >
+            <span className="font-['Cinzel',serif] text-[10.5px] sm:text-[11.5px] font-medium tracking-[0.2em] text-[#1e3a58] uppercase select-none whitespace-nowrap block leading-none text-center pl-[0.2em]">
+              CLICK TO OPEN
+            </span>
+          </motion.div>
+        </div>
       </div>
     </div>
   );
