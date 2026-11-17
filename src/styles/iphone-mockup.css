@@ -206,6 +206,19 @@
     background: #0d0812;
     box-shadow: inset 0 0 1px rgba(255, 255, 255, 0.2);
   }
+
+  /* Desktop iPhone Mockup Content Scaler:
+     Decreases text, elements, and card sizes by 35% (0.65x) within overlay containers on desktop
+     while keeping section boundaries exact so scrolling stops precisely at the Thank You page. */
+  .desktop-page-overlay {
+    transform: scale(0.65);
+    transform-origin: top center;
+  }
+
+  .desktop-events-overlay {
+    transform: scale(0.70);
+    transform-origin: top center;
+  }
 }
 
 /* Inner App Containers */
@@ -264,5 +277,10 @@
   .btn-hardware,
   .iphone-notch {
     display: none !important;
+  }
+
+  .desktop-page-overlay,
+  .desktop-events-overlay {
+    transform: none !important;
   }
 }

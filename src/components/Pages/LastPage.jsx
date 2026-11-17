@@ -235,7 +235,7 @@ export default function LastPage() {
       </svg>
 
       {/* Typography Overlay */}
-      <div className="absolute top-[22%] inset-x-0 flex flex-col items-center text-center px-8">
+      <div className="absolute top-[22%] inset-x-0 flex flex-col items-center text-center px-8 desktop-page-overlay">
         {/* Quote */}
         <motion.p
           initial={{ opacity: 0, y: 16 }}

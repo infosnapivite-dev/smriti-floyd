@@ -80,7 +80,7 @@ export default function EventsPage() {
       />
 
       {/* Content Container */}
-      <div className="absolute top-[13.5%] inset-x-0 flex flex-col items-center px-4 sm:px-6">
+      <div className="absolute top-[13.5%] inset-x-0 flex flex-col items-center px-4 sm:px-6 desktop-events-overlay">
         {/* Title */}
         <motion.h2
           initial={{ opacity: 0, y: 15 }}

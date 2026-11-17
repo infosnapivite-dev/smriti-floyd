@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import haldiFullBg from '../../assets/haldi page.webp';
 import sangeetFullBg from '../../assets/sangeet page.webp';
@@ -106,7 +107,7 @@ export default function EventDetailModal({ event, onClose }) {
 
   const currentBg = bgMap[event.id] || haldiFullBg;
 
-  return (
+  const modalContent = (
     <AnimatePresence>
       <motion.div
         key="full-event-page"
@@ -114,19 +115,48 @@ export default function EventDetailModal({ event, onClose }) {
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.98 }}
         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="fixed inset-0 z-50 w-full h-full bg-[#f4ece1] overflow-hidden select-none"
+        className="absolute inset-0 z-50 w-full h-full bg-[#f4ece1] overflow-hidden select-none pointer-events-auto"
       >
         {/* Full-Page Event Backdrop Artwork */}
         <div className="relative w-full h-full aspect-[3000/5400] max-h-full mx-auto overflow-hidden">
           <motion.img
-            initial={{ opacity: 0, scale: 1.04 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             src={currentBg}
             alt={`${event.title} Celebration`}
-            className="w-full h-full object-cover pointer-events-none"
+            className="w-full h-full object-fill pointer-events-none"
             loading="eager"
           />
+
+          {/* Top-Right Close 'X' Button to return to parent page */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
+            onPointerUp={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
+            className="absolute top-4 right-4 z-40 w-10 h-10 rounded-full bg-black/45 hover:bg-black/70 active:scale-90 text-white backdrop-blur-md flex items-center justify-center shadow-lg border border-white/25 transition-all cursor-pointer pointer-events-auto"
+            aria-label="Close"
+            title="Close"
+          >
+            <svg
+              className="w-5 h-5 text-white"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
 
           {/* Typography & Elements Layout as per Reference Images with Individual Appearing Animations */}
 
@@ -321,38 +351,14 @@ export default function EventDetailModal({ event, onClose }) {
               </motion.p>
             </motion.div>
           )}
-
-          {/* Bottom Center Back Arrow Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 24, scale: 0.85 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ delay: 0.65, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute bottom-6 inset-x-0 flex items-center justify-center z-30 pointer-events-auto"
-          >
-            <motion.button
-              type="button"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={onClose}
-              className="w-12 h-12 rounded-full bg-black/45 hover:bg-black/65 text-white backdrop-blur-md flex items-center justify-center shadow-2xl border border-white/25 transition-all cursor-pointer"
-              aria-label="Back to Events"
-              title="Back to Events"
-            >
-              <svg
-                className="w-5 h-5 text-white"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M19 12H5M12 19l-7-7 7-7" />
-              </svg>
-            </motion.button>
-          </motion.div>
         </div>
       </motion.div>
     </AnimatePresence>
   );
+
+  const modalRoot = typeof document !== 'undefined' ? document.getElementById('modal-root') : null;
+  if (modalRoot) {
+    return createPortal(modalContent, modalRoot);
+  }
+  return modalContent;
 }

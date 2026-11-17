@@ -10,7 +10,7 @@ export default function RsvpPage() {
   const [showTravelModal, setShowTravelModal] = useState(false);
 
   return (
-    <section className="relative w-full aspect-[3000/5400] overflow-hidden select-none bg-[#f4ece1]">
+    <section className="relative w-full aspect-[3000/5400] overflow-hidden select-none bg-[#f4ece1] [container-type:inline-size]">
       {/* Background artwork (signpost and vintage fiat car at bottom) */}
       <img
         src={rsvpBg}
@@ -20,7 +20,7 @@ export default function RsvpPage() {
       />
 
       {/* Top Content: RSVP & Plan Your Journey */}
-      <div className="absolute top-[6.5%] inset-x-0 flex flex-col items-center text-center px-5">
+      <div className="absolute top-[6.5%] inset-x-0 z-20 flex flex-col items-center text-center px-5 desktop-page-overlay pointer-events-auto">
         {/* RSVP Section */}
         <motion.h2
           initial={{ opacity: 0, y: 14 }}
@@ -115,12 +115,92 @@ export default function RsvpPage() {
         </motion.button>
       </div>
 
-      {/* Signpost Clickable Overlays (Connecting directly to travel info) */}
-      <div 
-        className="absolute left-[8%] bottom-[23%] w-[35%] h-[18%] cursor-pointer z-10"
+      {/* Wooden Signpost Clickable Hit Area */}
+      <div
+        className="absolute left-[5%] top-[58%] w-[35%] h-[24%] z-10 cursor-pointer pointer-events-auto"
         title="Click to view travel guide"
         onClick={() => setShowTravelModal(true)}
       />
+
+      {/* Wooden Signpost Directional Arrows Overlay */}
+      <div
+        className="absolute inset-0 z-10 pointer-events-none"
+      >
+        {/* Sign 1: GETTING THERE */}
+        <div
+          className="absolute left-[12.4%] w-[18.4%] h-[2.4%] text-center flex items-center justify-center select-none pointer-events-auto cursor-pointer"
+          style={{ top: '61.85%', transform: 'translateY(-6px) rotate(-5deg)' }}
+          title="Click to view travel guide"
+          onClick={() => setShowTravelModal(true)}
+        >
+          <span
+            className="font-['Cinzel',serif] font-semibold text-[#15375d] tracking-[0.06em] block whitespace-nowrap"
+            style={{ fontSize: 'clamp(7px, 2.25cqi, 10.5px)' }}
+          >
+            GETTING THERE
+          </span>
+        </div>
+
+        {/* Sign 2: YOUR STAY */}
+        <div
+          className="absolute left-[12.4%] w-[18.4%] h-[2.4%] text-center flex items-center justify-center select-none pointer-events-auto cursor-pointer"
+          style={{ top: '65.45%', transform: 'translateY(-6px) rotate(-5deg)' }}
+          title="Click to view travel guide"
+          onClick={() => setShowTravelModal(true)}
+        >
+          <span
+            className="font-['Cinzel',serif] font-semibold text-[#15375d] tracking-[0.11em] block whitespace-nowrap"
+            style={{ fontSize: 'clamp(7.5px, 2.4cqi, 11px)' }}
+          >
+            YOUR STAY
+          </span>
+        </div>
+
+        {/* Sign 3: THINGS TO DO */}
+        <div
+          className="absolute left-[12.4%] w-[18.4%] h-[2.4%] text-center flex items-center justify-center select-none pointer-events-auto cursor-pointer"
+          style={{ top: '69.05%', transform: 'translateY(-6px) rotate(-5deg)' }}
+          title="Click to view travel guide"
+          onClick={() => setShowTravelModal(true)}
+        >
+          <span
+            className="font-['Cinzel',serif] font-semibold text-[#15375d] tracking-[0.06em] block whitespace-nowrap"
+            style={{ fontSize: 'clamp(7px, 2.25cqi, 10.5px)' }}
+          >
+            THINGS TO DO
+          </span>
+        </div>
+
+        {/* Sign 4: WHAT TO PACK */}
+        <div
+          className="absolute left-[12.4%] w-[18.4%] h-[2.4%] text-center flex items-center justify-center select-none pointer-events-auto cursor-pointer"
+          style={{ top: '72.45%', transform: 'translateY(-6px) rotate(-5deg)' }}
+          title="Click to view travel guide"
+          onClick={() => setShowTravelModal(true)}
+        >
+          <span
+            className="font-['Cinzel',serif] font-semibold text-[#15375d] tracking-[0.06em] block whitespace-nowrap"
+            style={{ fontSize: 'clamp(7px, 2.25cqi, 10.5px)' }}
+          >
+            WHAT TO PACK
+          </span>
+        </div>
+
+        {/* Sign 5: NEED HELP? */}
+        <div
+          className="absolute left-[12.4%] w-[18.4%] h-[2.4%] text-center flex items-center justify-center select-none pointer-events-auto cursor-pointer"
+          style={{ top: '75.85%', transform: 'translateY(-6px) rotate(-5deg)' }}
+          title="Click to view travel guide"
+          onClick={() => setShowTravelModal(true)}
+        >
+          <span
+            className="font-['Cinzel',serif] font-semibold text-[#15375d] tracking-[0.08em] block whitespace-nowrap"
+            style={{ fontSize: 'clamp(7px, 2.25cqi, 10.5px)' }}
+          >
+            NEED HELP?
+          </span>
+        </div>
+      </div>
 
       {/* Modals */}
       <FamilyModal

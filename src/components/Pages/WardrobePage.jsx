@@ -18,7 +18,7 @@ export default function WardrobePage() {
       />
 
       {/* Top Header Text (Positioned above the illustrated wardrobe cabinet) */}
-      <div className="absolute top-[12.5%] inset-x-0 flex flex-col items-center text-center px-4">
+      <div className="absolute top-[12.5%] inset-x-0 flex flex-col items-center text-center px-4 desktop-page-overlay">
         <motion.h2
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -40,7 +40,7 @@ export default function WardrobePage() {
       </div>
 
       {/* "OPEN" Button & Divider (Positioned below the wardrobe cabinet at ~47%) */}
-      <div className="absolute top-[47%] inset-x-0 flex flex-col items-center text-center px-4">
+      <div className="absolute top-[47%] inset-x-0 flex flex-col items-center text-center px-4 desktop-page-overlay">
         <motion.button
           type="button"
           initial={{ opacity: 0, y: 15 }}

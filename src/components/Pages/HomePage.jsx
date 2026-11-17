@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import homeVideo from '../../assets/2-home page.mp4';
 import deviderImg from '../../assets/devider.webp';
 
-export default function HomePage({ isEnvelopeOpen = true }) {
+export default function HomePage({ isEnvelopeOpen = true, isOpeningStarted = false }) {
   const videoRef = useRef(null);
   const [hasPlayed, setHasPlayed] = useState(false);
   const [showContent, setShowContent] = useState(false);
@@ -12,9 +12,8 @@ export default function HomePage({ isEnvelopeOpen = true }) {
     const video = videoRef.current;
     if (!video) return;
 
-    if (isEnvelopeOpen) {
-      // Reset and trigger auto-play once envelope opens
-      video.currentTime = 0;
+    if (isEnvelopeOpen || isOpeningStarted) {
+      // Reset and trigger auto-play once envelope starts opening
       setShowContent(true);
 
       const playPromise = video.play();
@@ -36,7 +35,7 @@ export default function HomePage({ isEnvelopeOpen = true }) {
       setHasPlayed(false);
       setShowContent(false);
     }
-  }, [isEnvelopeOpen]);
+  }, [isEnvelopeOpen, isOpeningStarted]);
 
   const handleVideoEnded = () => {
     // Ensures video remains perfectly frozen on the last frame
@@ -60,7 +59,7 @@ export default function HomePage({ isEnvelopeOpen = true }) {
       />
 
       {/* Typography Overlay that appears on top of the video */}
-      <div className="absolute top-[23.5%] inset-x-0 flex flex-col items-center text-center px-4 z-10">
+      <div className="absolute top-[23.5%] inset-x-0 flex flex-col items-center text-center px-4 z-10 desktop-page-overlay">
         {/* Couple Names in Great Vibes */}
         <motion.h1
           initial={{ opacity: 0, y: 16 }}

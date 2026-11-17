@@ -16,7 +16,7 @@ export default function CouplePage() {
       />
 
       {/* Content Container */}
-      <div className="absolute top-[2.5%] inset-x-0 flex flex-col items-center text-center px-6">
+      <div className="absolute top-[2.5%] inset-x-0 flex flex-col items-center text-center px-6 desktop-page-overlay">
         {/* Lord Ganesha Icon */}
         <motion.div
           initial={{ opacity: 0, scale: 0.88, y: 12 }}

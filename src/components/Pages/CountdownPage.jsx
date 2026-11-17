@@ -9,8 +9,8 @@ export default function CountdownPage() {
 
   useEffect(() => {
     const calculateDays = () => {
-      // Wedding date: January 18, 2027
-      const weddingDate = new Date('2027-01-18T00:00:00');
+      // Wedding date: January 20, 2027
+      const weddingDate = new Date('2027-01-20T00:00:00');
       const now = new Date();
       const difference = weddingDate.getTime() - now.getTime();
       
@@ -52,7 +52,7 @@ export default function CountdownPage() {
       />
 
       {/* Countdown Content Overlay */}
-      <div className="absolute top-[18%] inset-x-0 flex flex-col items-center text-center px-4">
+      <div className="absolute top-[18%] inset-x-0 flex flex-col items-center text-center px-4 desktop-page-overlay">
         {/* Title in one row with slightly smaller text */}
         <motion.h2
           initial={{ opacity: 0, y: 14 }}

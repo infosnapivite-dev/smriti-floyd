@@ -14,6 +14,7 @@ import './styles/iphone-mockup.css';
 
 export default function App() {
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
+  const [isOpeningStarted, setIsOpeningStarted] = useState(false);
   const scrollContainerRef = useRef(null);
   const lenisRef = useRef(null);
 
@@ -54,6 +55,7 @@ export default function App() {
   };
 
   const handleReplayEnvelope = () => {
+    setIsOpeningStarted(false);
     setIsEnvelopeOpen(false);
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTop = 0;
@@ -63,7 +65,7 @@ export default function App() {
   return (
     <div className="desktop-viewport-container">
       <IPhoneFrame>
-        <div className="relative w-full h-full bg-[#f4ece1] overflow-hidden">
+        <div id="phone-screen-viewport" className="relative w-full h-full bg-[#f4ece1] overflow-hidden">
           {/* Continuous Scrolling Wedding Website (Pages 2 through 8) */}
           <main
             id="mockup-scroll-container"
@@ -75,7 +77,7 @@ export default function App() {
             {/* Continuous Page Sections Stack (Zero crop, exact aspect ratio matching mobile screens) */}
             <div className="w-full flex flex-col bg-[#f4ece1]">
               {/* Page 2: Home Page (Taj Mussoorie Video & Couple) */}
-              <HomePage isEnvelopeOpen={isEnvelopeOpen} />
+              <HomePage isEnvelopeOpen={isEnvelopeOpen} isOpeningStarted={isOpeningStarted} />
 
               {/* Page 3: Couple & Family Details */}
               <CouplePage />
@@ -100,6 +102,9 @@ export default function App() {
             </div>
           </main>
 
+          {/* Modal Portal Root (Mounted at Phone Viewport level to avoid scroll scaling distortion) */}
+          <div id="modal-root" className="absolute inset-0 z-50 pointer-events-none overflow-hidden" />
+
           {/* Interactive Opening Envelope Overlay */}
           <AnimatePresence>
             {!isEnvelopeOpen && (
@@ -114,7 +119,10 @@ export default function App() {
                   transition: { duration: 0.9, ease: 'easeInOut' }
                 }}
               >
-                <EnvelopeOpening onOpenComplete={() => setIsEnvelopeOpen(true)} />
+                <EnvelopeOpening 
+                  onOpenStart={() => setIsOpeningStarted(true)}
+                  onOpenComplete={() => setIsEnvelopeOpen(true)} 
+                />
               </motion.div>
             )}
           </AnimatePresence>

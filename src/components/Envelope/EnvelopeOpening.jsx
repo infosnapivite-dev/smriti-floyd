@@ -12,46 +12,60 @@ import envelopeSealImg from '../../assets/first page - envelope seal.webp';
  * 4. Click to open button removed
  * 5. Smooth blend effect dissolving both PNGs when envelope opens
  */
-export default function EnvelopeOpening({ onOpenComplete }) {
+export default function EnvelopeOpening({ onOpenStart, onOpenComplete }) {
   const [isOpening, setIsOpening] = useState(false);
 
   const handleOpen = () => {
     if (isOpening) return;
     setIsOpening(true);
+    if (onOpenStart) {
+      onOpenStart();
+    }
 
-    // Decreased blend time for a smoother, quicker transition
+    // Gentle blend time so the bottom part blends slowly and gracefully
     setTimeout(() => {
       if (onOpenComplete) {
         onOpenComplete();
       }
-    }, 1800);
+    }, 2400);
   };
 
   return (
     <div 
-      className="relative w-full h-full min-h-full flex items-center justify-center bg-[#f4ece1] overflow-hidden select-none cursor-pointer"
+      className="relative w-full h-full min-h-full flex items-center justify-center bg-transparent overflow-hidden select-none cursor-pointer"
       onClick={handleOpen}
       title="Tap anywhere to open envelope"
     >
+      {/* Cream background that covers the screen when closed, and fades out immediately when envelope opens */}
+      <motion.div
+        className="absolute inset-0 bg-[#f4ece1] z-0 pointer-events-none"
+        initial={{ opacity: 1 }}
+        animate={{ opacity: isOpening ? 0 : 1 }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
+      />
       {/* 3D Perspective Stage for Envelope Flap - slight zoom (scale-[1.05]) to eliminate left/right edge gap */}
       <div 
         className="relative w-full aspect-[888/1600] flex items-center justify-center scale-[1.05]"
         style={{ perspective: 1800 }}
       >
-        {/* Layer 1: Bottom Remaining Envelope Card (Placed at Background) */}
+        {/* Layer 1: Bottom Remaining Envelope Card (Holds solid while flap opens, then blends slowly) */}
         <motion.div
           className="absolute inset-0 w-full h-full z-10 pointer-events-none"
           initial={{ opacity: 1, scale: 1.045, filter: 'blur(0px)' }}
           animate={
             isOpening
               ? {
-                  opacity: [1, 0.8, 0.3, 0],
-                  scale: [1.045, 1.055, 1.07, 1.09],
-                  filter: ['blur(0px)', 'blur(0px)', 'blur(2px)', 'blur(8px)'],
+                  opacity: [1, 1, 0.85, 0.4, 0],
+                  scale: [1.045, 1.045, 1.055, 1.07, 1.085],
+                  filter: ['blur(0px)', 'blur(0px)', 'blur(0px)', 'blur(2px)', 'blur(6px)'],
                 }
               : { opacity: 1, scale: 1.045, filter: 'blur(0px)' }
           }
-          transition={{ duration: 1.7, delay: 0.15, ease: [0.35, 0, 0.25, 1] }}
+          transition={{
+            duration: 2.3,
+            times: [0, 0.45, 0.7, 0.88, 1],
+            ease: [0.25, 0.1, 0.25, 1],
+          }}
         >
           <img
             src={remainingImg}
@@ -73,15 +87,16 @@ export default function EnvelopeOpening({ onOpenComplete }) {
             isOpening
               ? {
                   // Positive rotateX brings the flap tip forward towards the viewer (front side opening)
-                  rotateX: [0, 55, 115, 180],
-                  opacity: [1, 1, 0.7, 0],
-                  scale: [1.045, 1.06, 1.08, 1.1],
-                  filter: ['blur(0px)', 'blur(0px)', 'blur(2px)', 'blur(6px)'],
+                  rotateX: [0, 50, 110, 180],
+                  opacity: [1, 1, 0.8, 0],
+                  scale: [1.045, 1.055, 1.07, 1.09],
+                  filter: ['blur(0px)', 'blur(0px)', 'blur(1.5px)', 'blur(6px)'],
                 }
               : { rotateX: 0, opacity: 1, scale: 1.045 }
           }
           transition={{
-            duration: 1.6,
+            duration: 1.8,
+            times: [0, 0.35, 0.7, 1],
             ease: [0.25, 0.1, 0.25, 1],
           }}
         >

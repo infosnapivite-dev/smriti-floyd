@@ -1,12 +1,13 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function TravelModal({ isOpen, onClose }) {
   if (!isOpen) return null;
 
-  return (
+  const modalContent = (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+      <div className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm pointer-events-auto">
         <motion.div
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -62,4 +63,10 @@ export default function TravelModal({ isOpen, onClose }) {
       </div>
     </AnimatePresence>
   );
+
+  const modalRoot = typeof document !== 'undefined' ? document.getElementById('modal-root') : null;
+  if (modalRoot) {
+    return createPortal(modalContent, modalRoot);
+  }
+  return modalContent;
 }
