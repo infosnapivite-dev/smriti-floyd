@@ -117,6 +117,56 @@ export default function HomePage({ isEnvelopeOpen = true, isOpeningStarted = fal
           </p>
         </motion.div>
       </div>
+
+      {/* Bottom Center Scroll Indication (No pill layout, animated downward arrow + scroll text) */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={
+          showContent
+            ? {
+                opacity: 1,
+                transition: { duration: 0.8, delay: 1.6, ease: 'easeOut' },
+              }
+            : { opacity: 0 }
+        }
+        onClick={() => {
+          const scrollContainer = document.getElementById('mockup-scroll-container');
+          if (scrollContainer) {
+            scrollContainer.scrollBy({ top: scrollContainer.clientHeight * 0.95, behavior: 'smooth' });
+          } else {
+            window.scrollBy({ top: window.innerHeight * 0.95, behavior: 'smooth' });
+          }
+        }}
+        className="absolute inset-x-0 bottom-[2.5%] z-20 flex flex-col items-center justify-center cursor-pointer select-none pointer-events-auto"
+        title="Scroll to explore"
+      >
+        <motion.div
+          animate={{
+            y: [0, 5, 0],
+          }}
+          transition={{
+            duration: 1.8,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+          className="flex flex-col items-center justify-center gap-1 text-[#183654]"
+        >
+          <span className="font-['Cinzel',serif] text-[11.5px] sm:text-[13px] font-semibold tracking-[0.28em] pl-[0.28em] uppercase leading-none drop-shadow-sm opacity-95">
+            Scroll
+          </span>
+          <svg
+            className="w-5 h-5 sm:w-6 sm:h-6 drop-shadow-sm opacity-95"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }
