@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Pointer } from 'lucide-react';
 import upperFlapImg from '../../assets/1-envelope-upper-flap.webp';
 import remainingImg from '../../assets/1-envelope-remaining.webp';
 import envelopeSealImg from '../../assets/first page - envelope seal.webp';
@@ -143,9 +142,9 @@ export default function EnvelopeOpening({ onOpenStart, onOpenComplete }) {
           </motion.div>
         </div>
 
-        {/* Layer 4: Compact Elegant Pill "CLICK TO OPEN" Button with Hand Icon */}
+        {/* Layer 4: Compact Elegant Pill "CLICK TO OPEN" Button */}
         <div
-          className="absolute inset-x-0 z-30 pointer-events-auto flex flex-col items-center justify-center cursor-pointer select-none"
+          className="absolute inset-x-0 z-30 pointer-events-auto flex justify-center items-center cursor-pointer select-none"
           style={{ bottom: 'calc(5.5% + 50px)' }}
         >
           <motion.div
@@ -156,29 +155,13 @@ export default function EnvelopeOpening({ onOpenStart, onOpenComplete }) {
                 : { opacity: 1, y: 0 }
             }
             transition={{ duration: 0.45, ease: 'easeOut' }}
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
-            className="flex flex-col items-center justify-center gap-2 cursor-pointer"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="px-5 py-1.5 sm:px-6 sm:py-2 rounded-full border border-[#9b6a38]/85 bg-[#f4ece1]/85 backdrop-blur-[2px] shadow-sm hover:bg-[#9b6a38]/10 transition-colors duration-200 whitespace-nowrap flex items-center justify-center text-center cursor-pointer"
           >
-            {/* Pill Button */}
-            <div className="px-5 py-1.5 sm:px-6 sm:py-2 rounded-full border border-[#9b6a38]/85 bg-[#f4ece1]/85 backdrop-blur-[2px] shadow-sm hover:bg-[#9b6a38]/10 transition-colors duration-200 whitespace-nowrap flex items-center justify-center text-center">
-              <span className="font-['Cinzel',serif] text-[10.5px] sm:text-[11.5px] font-medium tracking-[0.2em] text-[#1e3a58] uppercase select-none whitespace-nowrap block leading-none text-center pl-[0.2em]">
-                CLICK TO OPEN
-              </span>
-            </div>
-
-            {/* Hand Pointer Icon matching reference */}
-            <motion.div
-              animate={{ y: [0, -3.5, 0] }}
-              transition={{
-                duration: 1.6,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-              className="flex items-center justify-center text-[#4b5563]"
-            >
-              <Pointer className="w-5 h-5 sm:w-6 sm:h-6 drop-shadow-sm" strokeWidth={1.8} />
-            </motion.div>
+            <span className="font-['Cinzel',serif] text-[10.5px] sm:text-[11.5px] font-medium tracking-[0.2em] text-[#1e3a58] uppercase select-none whitespace-nowrap block leading-none text-center pl-[0.2em]">
+              CLICK TO OPEN
+            </span>
           </motion.div>
         </div>
       </div>
