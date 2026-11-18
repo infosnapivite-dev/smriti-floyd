@@ -13,29 +13,45 @@ export default function HomePage({ isEnvelopeOpen = true, isOpeningStarted = fal
     if (!video) return;
 
     if (isEnvelopeOpen || isOpeningStarted) {
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            setHasPlayed(true);
-          })
-          .catch((err) => {
-            console.log("Autoplay unmuted blocked, falling back to muted:", err);
-            video.muted = true;
-            video.play().then(() => setHasPlayed(true)).catch((e) => console.log(e));
-          });
+      const playVideo = () => {
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              setHasPlayed(true);
+            })
+            .catch((err) => {
+              console.log("Autoplay unmuted blocked, falling back to muted:", err);
+              video.muted = true;
+              video.play().then(() => setHasPlayed(true)).catch((e) => console.log(e));
+            });
+        }
+      };
+
+      let videoTimer;
+      if (isEnvelopeOpen) {
+        // If already opened, play immediately
+        playVideo();
+      } else {
+        // Play the video after 1.2 seconds as the envelope opens
+        videoTimer = setTimeout(playVideo, 1200);
       }
 
+      let contentTimer;
       // If already open (e.g. replay or loaded opened), show immediately
       if (isEnvelopeOpen) {
         setShowContent(true);
       } else {
-        // Reveal text gracefully as the bottom envelope slides down
-        const timer = setTimeout(() => {
+        // Reveal text gracefully as the bottom envelope slides down (1s delay + 1.4s slide = 2.4s)
+        contentTimer = setTimeout(() => {
           setShowContent(true);
-        }, 2000);
-        return () => clearTimeout(timer);
+        }, 2400);
       }
+
+      return () => {
+        if (videoTimer) clearTimeout(videoTimer);
+        if (contentTimer) clearTimeout(contentTimer);
+      };
     } else {
       // When envelope is closed / replayed, pause and rewind
       video.pause();

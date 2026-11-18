@@ -23,12 +23,12 @@ export default function EnvelopeOpening({ onOpenStart, onOpenComplete }) {
       onOpenStart();
     }
 
-    // Slide down time for bottom envelope to smoothly slide off-screen (slowed down for tactile grace)
+    // Slide down time for bottom envelope to smoothly slide off-screen (1.0s delay + 3.8s slide = 4.8s)
     setTimeout(() => {
       if (onOpenComplete) {
         onOpenComplete();
       }
-    }, 4600);
+    }, 4850);
   };
 
   return (
@@ -49,23 +49,25 @@ export default function EnvelopeOpening({ onOpenStart, onOpenComplete }) {
         className="relative w-full aspect-[888/1600] flex items-center justify-center scale-[1.05]"
         style={{ perspective: 1800 }}
       >
-        {/* Layer 1: Bottom Remaining Envelope Card (Slides down slowly to reveal HomePage without blending/blur) */}
+        {/* Layer 1: Bottom Remaining Envelope Card (Animates down after 1s delay when upper flap animates) */}
         <motion.div
           className="absolute inset-0 w-full h-full z-10 pointer-events-none"
           initial={{ y: '0%', opacity: 1, scale: 1.045 }}
           animate={
             isOpening
               ? {
-                  y: ['0%', '0%', '115%'],
-                  opacity: [1, 1, 1, 0],
+                  y: '115%',
+                  opacity: 1,
                   scale: 1.045,
                 }
               : { y: '0%', opacity: 1, scale: 1.045 }
           }
           transition={{
-            duration: 4.6,
-            times: [0, 0.15, 0.96, 1],
-            ease: [0.25, 0.1, 0.25, 1],
+            y: {
+              delay: isOpening ? 1.0 : 0,
+              duration: 3.8,
+              ease: [0.25, 0.1, 0.25, 1],
+            },
           }}
         >
           <img
