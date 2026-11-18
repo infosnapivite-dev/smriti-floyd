@@ -10,6 +10,13 @@ import EventsPage from './components/Pages/EventsPage';
 import WardrobePage from './components/Pages/WardrobePage';
 import RsvpPage from './components/Pages/RsvpPage';
 import LastPage from './components/Pages/LastPage';
+import haldiFullBg from './assets/haldi page.webp';
+import sangeetFullBg from './assets/sangeet page.webp';
+import pherasFullBg from './assets/pheras.webp';
+import receptionFullBg from './assets/reception.webp';
+import familyBg from './assets/family details page.webp';
+import eventsBg from './assets/5-events page.webp';
+import { preloadImages } from './utils/imagePreloader';
 import './styles/iphone-mockup.css';
 
 export default function App() {
@@ -17,6 +24,18 @@ export default function App() {
   const [isOpeningStarted, setIsOpeningStarted] = useState(false);
   const scrollContainerRef = useRef(null);
   const lenisRef = useRef(null);
+
+  // Silently preload event modal and detail backgrounds in the background on initial load
+  useEffect(() => {
+    preloadImages([
+      eventsBg,
+      haldiFullBg,
+      sangeetFullBg,
+      pherasFullBg,
+      receptionFullBg,
+      familyBg,
+    ]);
+  }, []);
 
   // Initialize Lenis smooth scroll on the mobile scroll container once envelope is opened
   useEffect(() => {

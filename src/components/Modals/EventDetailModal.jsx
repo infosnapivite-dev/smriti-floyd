@@ -118,15 +118,19 @@ export default function EventDetailModal({ event, onClose }) {
         className="absolute inset-0 z-50 w-full h-full bg-[#f4ece1] overflow-hidden select-none pointer-events-auto"
       >
         {/* Full-Page Event Backdrop Artwork */}
-        <div className="relative w-full h-full aspect-[3000/5400] max-h-full mx-auto overflow-hidden">
+        <div 
+          className="relative w-full h-full aspect-[3000/5400] max-h-full mx-auto overflow-hidden"
+          style={{ backgroundColor: event.bgColorHex || '#f4ece1' }}
+        >
           <motion.img
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             src={currentBg}
             alt={`${event.title} Celebration`}
             className="w-full h-full object-fill pointer-events-none"
             loading="eager"
+            decoding="async"
           />
 
           {/* Top-Right Close 'X' Button to return to parent page */}
