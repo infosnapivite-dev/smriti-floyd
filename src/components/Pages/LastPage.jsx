@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
+import { Instagram } from 'lucide-react';
 import lastPageBg from '../../assets/8-last page.webp';
 import deviderImg from '../../assets/devider.webp';
 import paperPlaneImg from '../../assets/paper-plane.png';
@@ -271,6 +272,34 @@ export default function LastPage() {
           className="w-28 sm:w-32 object-contain pointer-events-none"
         />
       </div>
+
+      {/* Bottom Center Snapivite Instagram Link in Pill Shape Box with Blurred Background */}
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.8, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        className="absolute inset-x-0 bottom-[2.5%] z-20 flex justify-center items-center pointer-events-auto select-none"
+      >
+        <motion.a
+          href="https://www.instagram.com/snapivite"
+          target="_blank"
+          rel="noopener noreferrer"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="group h-[24px] sm:h-[26px] px-3 sm:px-3.5 rounded-full border border-[#916a3c]/60 bg-[#f4ece1]/75 backdrop-blur-md shadow-sm hover:bg-[#f4ece1]/90 hover:border-[#916a3c] transition-all duration-200 cursor-pointer inline-flex items-center justify-center gap-1.5 text-center whitespace-nowrap"
+          title="Visit Snapivite on Instagram"
+        >
+          <Instagram 
+            className="w-[11px] h-[11px] sm:w-[12px] sm:h-[12px] text-[#183654] group-hover:text-[#916a3c] transition-colors duration-200 shrink-0" 
+            style={{ position: 'relative', top: '-2px' }}
+            strokeWidth={1.9} 
+          />
+          <span className="font-['Cinzel',serif] text-[8.5px] sm:text-[9.5px] font-medium tracking-[0.2em] text-[#183654] group-hover:text-[#916a3c] transition-colors duration-200 uppercase leading-none select-none">
+            Snapivite
+          </span>
+        </motion.a>
+      </motion.div>
     </section>
   );
 }
