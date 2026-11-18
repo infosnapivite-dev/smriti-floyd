@@ -5,6 +5,7 @@ import deviderImg from '../../assets/devider.webp';
 
 export default function HomePage({ isEnvelopeOpen = true, isOpeningStarted = false }) {
   const videoRef = useRef(null);
+  const canvasRef = useRef(null);
   const [hasPlayed, setHasPlayed] = useState(false);
   const [showContent, setShowContent] = useState(false);
 
@@ -44,28 +45,92 @@ export default function HomePage({ isEnvelopeOpen = true, isOpeningStarted = fal
       }
 
       return () => {
-        if (videoTimer) clearTimeout(videoTimer);
         if (contentTimer) clearTimeout(contentTimer);
       };
     } else {
       // When envelope is closed / replayed, pause and rewind
       video.pause();
-      video.currentTime = 0;
+      try {
+        video.currentTime = 0;
+      } catch (e) {}
       setHasPlayed(false);
       setShowContent(false);
     }
   }, [isEnvelopeOpen, isOpeningStarted]);
 
+  // Monitor video frame by frame:
+  // 1. Draw frames onto canvasRef as an indestructible fallback.
+  // 2. Pause exactly right before video ends (~4.92s) so iOS WebKit NEVER fires the 'ended'
+  //    event which causes mobile Safari to wipe the video frame buffer to solid black.
+  useEffect(() => {
+    let animId;
+    const syncFrame = () => {
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+
+      if (video) {
+        // Continuously paint current video frame onto canvas
+        if (canvas && video.videoWidth > 0 && !video.paused) {
+          if (canvas.width !== video.videoWidth) {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+          }
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          }
+        }
+
+        // Freeze gracefully on the last frame before 'ended' triggers (5s video, freeze at ~4.92s)
+        if (video.duration > 0 && video.currentTime >= video.duration - 0.08) {
+          video.pause();
+          try {
+            video.currentTime = video.duration - 0.08;
+          } catch (e) {}
+
+          // Ensure canvas definitely has this final frame
+          if (canvas && video.videoWidth > 0) {
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+              ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            }
+          }
+          return; // Stop animation loop once frozen on last frame
+        }
+      }
+
+      animId = requestAnimationFrame(syncFrame);
+    };
+
+    if (isOpeningStarted || isEnvelopeOpen) {
+      animId = requestAnimationFrame(syncFrame);
+    }
+
+    return () => {
+      if (animId) cancelAnimationFrame(animId);
+    };
+  }, [isOpeningStarted, isEnvelopeOpen]);
+
   const handleVideoEnded = () => {
-    // Ensures video remains perfectly frozen on the last frame
-    if (videoRef.current) {
-      videoRef.current.pause();
+    // Failsafe: if video reaches ended, immediately seek to final frame and freeze
+    const video = videoRef.current;
+    if (video && video.duration > 0) {
+      try {
+        video.currentTime = Math.max(0, video.duration - 0.08);
+      } catch (e) {}
+      video.pause();
     }
   };
 
   return (
-    <section className="relative w-full aspect-[3000/5400] overflow-hidden select-none bg-transparent">
-      {/* Auto-playing Background Video (Plays exactly 1 time, loop disabled) */}
+    <section className="relative w-full aspect-[3000/5400] overflow-hidden select-none bg-[#f4ece1]">
+      {/* Indestructible Fallback Canvas: Holds the video frame persistently so it NEVER turns black on iOS */}
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+      />
+
+      {/* Auto-playing Background Video (Plays exactly 1 time, frozen on last frame) */}
       <video
         ref={videoRef}
         src={homeVideo}
