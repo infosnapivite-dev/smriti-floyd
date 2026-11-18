@@ -54,7 +54,7 @@ export default function CouplePage() {
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.75, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
         >
-          <p className="font-serif italic text-sm sm:text-base text-[#2c3e50] mb-2 tracking-wide">
+          <p className="font-serif text-sm sm:text-base text-[#2c3e50] mb-2 tracking-wide">
             With love and gratitude, we cherish the memory of
           </p>
           <p className="font-serif text-sm sm:text-[15px] md:text-base font-semibold text-[#8b5a2b] tracking-wide leading-snug">
