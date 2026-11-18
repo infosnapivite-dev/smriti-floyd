@@ -36,17 +36,13 @@ export default function EnvelopeOpening({ onOpenStart, onOpenComplete }) {
       onClick={handleOpen}
       title="Tap anywhere to open envelope"
     >
-      {/* Cream background that covers the screen when closed, and fades out immediately when envelope opens */}
-      <motion.div
-        className="absolute inset-0 bg-[#f4ece1] z-0 pointer-events-none"
-        initial={{ opacity: 1 }}
-        animate={{ opacity: isOpening ? 0 : 1 }}
-        transition={{ duration: 0.3, ease: 'easeOut' }}
-      />
       {/* 3D Perspective Stage for Envelope Flap - slight zoom (scale-[1.05]) to eliminate left/right edge gap */}
       <div 
         className="relative w-full aspect-[888/1600] flex items-center justify-center scale-[1.05]"
-        style={{ perspective: 1800 }}
+        style={{ 
+          perspective: 1800,
+          WebkitPerspective: 1800,
+        }}
       >
         {/* Layer 1: Bottom Remaining Envelope Card (Animates down after 1s delay when upper flap animates) */}
         <motion.div
@@ -82,7 +78,9 @@ export default function EnvelopeOpening({ onOpenStart, onOpenComplete }) {
           style={{
             transformOrigin: '50% 0%',
             transformStyle: 'preserve-3d',
+            WebkitTransformStyle: 'preserve-3d',
             backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
           }}
           initial={{ rotateX: 0, opacity: 1, scale: 1.045 }}
           animate={
@@ -104,7 +102,7 @@ export default function EnvelopeOpening({ onOpenStart, onOpenComplete }) {
           <img
             src={upperFlapImg}
             alt="Envelope Opening Upper Flap"
-            className="w-full h-full object-cover pointer-events-none drop-shadow-2xl"
+            className="w-full h-full object-cover pointer-events-none"
           />
         </motion.div>
 

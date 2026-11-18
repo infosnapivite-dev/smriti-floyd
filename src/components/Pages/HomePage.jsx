@@ -28,14 +28,9 @@ export default function HomePage({ isEnvelopeOpen = true, isOpeningStarted = fal
         }
       };
 
-      let videoTimer;
-      if (isEnvelopeOpen) {
-        // If already opened, play immediately
-        playVideo();
-      } else {
-        // Play the video after 1.2 seconds as the envelope opens
-        videoTimer = setTimeout(playVideo, 1200);
-      }
+      // Play the video immediately so that on iOS/iPhone,
+      // the video paints live frames instantly as the upper flap opens without any blank delay.
+      playVideo();
 
       let contentTimer;
       // If already open (e.g. replay or loaded opened), show immediately
@@ -69,11 +64,12 @@ export default function HomePage({ isEnvelopeOpen = true, isOpeningStarted = fal
   };
 
   return (
-    <section className="relative w-full aspect-[3000/5400] overflow-hidden select-none bg-[#f4ece1]">
+    <section className="relative w-full aspect-[3000/5400] overflow-hidden select-none bg-transparent">
       {/* Auto-playing Background Video (Plays exactly 1 time, loop disabled) */}
       <video
         ref={videoRef}
         src={homeVideo}
+        autoPlay
         playsInline
         muted
         loop={false}
