@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Lenis from 'lenis';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Volume2, VolumeX } from 'lucide-react';
 import IPhoneFrame from './components/Chassis/IPhoneFrame';
 import EnvelopeOpening from './components/Envelope/EnvelopeOpening';
 import HomePage from './components/Pages/HomePage';
@@ -16,14 +17,18 @@ import pherasFullBg from './assets/pheras.webp';
 import receptionFullBg from './assets/reception.webp';
 import familyBg from './assets/family details page.webp';
 import eventsBg from './assets/5-events page.webp';
+import qaafiranaSong from './assets/Qaafirana.m4a';
 import { preloadImages } from './utils/imagePreloader';
 import './styles/iphone-mockup.css';
 
 export default function App() {
   const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
   const [isOpeningStarted, setIsOpeningStarted] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
   const scrollContainerRef = useRef(null);
   const lenisRef = useRef(null);
+  const audioRef = useRef(null);
 
   // Silently preload event modal and detail backgrounds in the background on initial load
   useEffect(() => {
@@ -81,10 +86,77 @@ export default function App() {
     }
   };
 
+  const startAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.play().then(() => {
+        setIsPlaying(true);
+      }).catch((err) => {
+        console.log("Audio playback waiting for interaction:", err);
+      });
+    }
+  };
+
+  const toggleMute = () => {
+    if (!audioRef.current) return;
+    if (!isPlaying) {
+      audioRef.current.muted = false;
+      audioRef.current.play().then(() => {
+        setIsPlaying(true);
+        setIsMuted(false);
+      }).catch(() => {});
+      return;
+    }
+    const nextMuted = !isMuted;
+    audioRef.current.muted = nextMuted;
+    setIsMuted(nextMuted);
+  };
+
   return (
     <div className="desktop-viewport-container">
+      {/* Background Wedding Music Player (Looping until website/browser closed) */}
+      <audio
+        ref={audioRef}
+        src={qaafiranaSong}
+        loop
+        preload="auto"
+      />
+
       <IPhoneFrame>
         <div id="phone-screen-viewport" className="relative w-full h-full bg-[#f4ece1] overflow-hidden">
+          {/* Top Right Floating Music Mute/Unmute Toggle Button */}
+          <AnimatePresence>
+            {isOpeningStarted && (
+              <motion.button
+                key="music-toggle-btn"
+                initial={{ opacity: 0, scale: 0.7 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.7 }}
+                transition={{ duration: 0.35, ease: 'easeOut' }}
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.92 }}
+                onClick={toggleMute}
+                aria-label={isMuted ? "Unmute background music" : "Mute background music"}
+                title={isMuted ? "Unmute Music (Qaafirana)" : "Mute Music"}
+                style={{
+                  top: 'max(14px, env(safe-area-inset-top, 14px))',
+                  right: 'max(14px, env(safe-area-inset-right, 14px))',
+                }}
+                className="absolute z-40 w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-[#fbf8f2]/85 backdrop-blur-md border border-[#c5a059]/60 shadow-lg text-[#183654] hover:bg-[#fbf8f2] hover:border-[#916a3c] hover:text-[#916a3c] transition-all duration-200 cursor-pointer pointer-events-auto"
+              >
+                {isMuted ? (
+                  <VolumeX className="w-4 h-4 sm:w-[18px] sm:h-[18px] text-[#786f77]" strokeWidth={2.2} />
+                ) : (
+                  <div className="relative flex items-center justify-center">
+                    <Volume2 className="w-4 h-4 sm:w-[18px] sm:h-[18px] text-[#183654]" strokeWidth={2.2} />
+                    {/* Subtle pulsing indicator */}
+                    <span className="absolute -top-1 -right-1 w-1.5 h-1.5 rounded-full bg-[#c5a059] animate-ping opacity-75" />
+                    <span className="absolute -top-1 -right-1 w-1.5 h-1.5 rounded-full bg-[#916a3c]" />
+                  </div>
+                )}
+              </motion.button>
+            )}
+          </AnimatePresence>
+
           {/* Continuous Scrolling Wedding Website (Pages 2 through 8) */}
           <main
             id="mockup-scroll-container"
@@ -137,7 +209,10 @@ export default function App() {
                 }}
               >
                 <EnvelopeOpening 
-                  onOpenStart={() => setIsOpeningStarted(true)}
+                  onOpenStart={() => {
+                    setIsOpeningStarted(true);
+                    startAudio();
+                  }}
                   onOpenComplete={() => setIsEnvelopeOpen(true)} 
                 />
               </motion.div>

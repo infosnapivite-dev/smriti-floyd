@@ -8,6 +8,12 @@ import paperPlaneImg from '../../assets/paper-plane.png';
 // Exact vector Bézier path extracted directly from original PDF page 8 vector operators (with all 5 segments including the complete circular loop)
 const pathD = "M -0.79,146.28 C 12.91,137.13 103.33,116.79 103.33,116.79 C 256.04,80.14 326.03,133.01 326.03,133.01 C 402.33,173.92 337.17,239.37 308.92,196.54 C 301.39,185.13 301.36,168.75 319.06,155.29 C 364.84,120.49 558.75,68.55 620.03,69.55";
 
+// Part 1: Approach and the complete circular loop (segments 1 through 4, ending at 319.06, 155.29)
+const pathD1 = "M -0.79,146.28 C 12.91,137.13 103.33,116.79 103.33,116.79 C 256.04,80.14 326.03,133.01 326.03,133.01 C 402.33,173.92 337.17,239.37 308.92,196.54 C 301.39,185.13 301.36,168.75 319.06,155.29";
+
+// Part 2: Loop exit trail (segment 5, starting at 319.06, 155.29 and heading rightward)
+const pathD2 = "M 319.06,155.29 C 364.84,120.49 558.75,68.55 620.03,69.55";
+
 // Calibrated flight progress mapping with pronounced graceful slowdown on the circle loop (s: ~0.38 -> 0.64)
 const FLIGHT_PROGRESS_LUT = (() => {
   const steps = 1000;
@@ -70,18 +76,22 @@ const getProgressForTime = (timeFraction) => {
 export default function LastPage() {
   const containerRef = useRef(null);
   const pathRef = useRef(null);
+  const path1Ref = useRef(null);
+  const path2Ref = useRef(null);
   const isInView = useInView(containerRef, { once: true, amount: 0.25 });
 
   // Initial state: ready at start or resting at end (rotated slightly rightward +8°)
   const [planePos, setPlanePos] = useState({ x: -0.79, y: 146.28, angle: 32 });
-  const [pathLength, setPathLength] = useState(1200);
+  const [pathLength, setPathLength] = useState(837);
+  const [len1, setLen1] = useState(522);
+  const [len2, setLen2] = useState(315);
   const [progress, setProgress] = useState(0);
   const [isFlying, setIsFlying] = useState(false);
   const [hasFlownOnce, setHasFlownOnce] = useState(false);
   const animFrameRef = useRef(null);
   const startTimeRef = useRef(null);
 
-  // Measure path length on mount
+  // Measure path lengths on mount
   useEffect(() => {
     if (pathRef.current) {
       const len = pathRef.current.getTotalLength();
@@ -91,6 +101,12 @@ export default function LastPage() {
         const startPt = pathRef.current.getPointAtLength(0);
         setPlanePos({ x: startPt.x, y: startPt.y, angle: 32 });
       }
+    }
+    if (path1Ref.current) {
+      setLen1(path1Ref.current.getTotalLength());
+    }
+    if (path2Ref.current) {
+      setLen2(path2Ref.current.getTotalLength());
     }
   }, []);
 
@@ -177,31 +193,70 @@ export default function LastPage() {
         fill="none"
       >
         <defs>
-          {/* Dynamic luminance mask: Path is completely hidden initially and reveals synchronously behind the moving plane */}
-          <mask id="plane-trail-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="720" height="1296">
+          {/* Mask 1: Approach & Circular Loop (Segments 1-4) */}
+          <mask id="plane-trail-mask-1" maskUnits="userSpaceOnUse" x="0" y="0" width="720" height="1296">
             <rect x="0" y="0" width="720" height="1296" fill="black" />
             <path
-              d={pathD}
+              ref={path1Ref}
+              d={pathD1}
               fill="none"
               stroke="white"
-              strokeWidth="45"
+              strokeWidth="10"
               strokeLinecap="round"
-              strokeDasharray={`${pathLength} ${pathLength}`}
-              strokeDashoffset={pathLength * (1 - (hasFlownOnce && !isFlying ? 1 : progress))}
+              strokeDasharray={`${len1} ${len1}`}
+              strokeDashoffset={hasFlownOnce && !isFlying ? 0 : Math.max(0, len1 - progress * pathLength)}
+            />
+          </mask>
+
+          {/* Mask 2: Loop Exit (Segment 5) - Isolated so it never bleeds early at the loop crossing */}
+          <mask id="plane-trail-mask-2" maskUnits="userSpaceOnUse" x="0" y="0" width="720" height="1296">
+            <rect x="0" y="0" width="720" height="1296" fill="black" />
+            <path
+              ref={path2Ref}
+              d={pathD2}
+              fill="none"
+              stroke="white"
+              strokeWidth="10"
+              strokeLinecap="round"
+              strokeDasharray={`${len2} ${len2}`}
+              strokeDashoffset={
+                hasFlownOnce && !isFlying
+                  ? 0
+                  : Math.max(0, len2 - Math.max(0, progress * pathLength - len1))
+              }
             />
           </mask>
         </defs>
 
-        {/* Dashed Flight Path from Original PDF vector data */}
+        {/* Hidden full path reference used for exact plane coordinate & tangent calculations */}
         <path
           ref={pathRef}
           d={pathD}
+          fill="none"
+          stroke="none"
+          className="pointer-events-none opacity-0"
+        />
+
+        {/* Dashed Flight Path Part 1: Approach & Circle Loop */}
+        <path
+          d={pathD1}
           stroke="#1e2c3d"
           strokeWidth="2.2"
           strokeDasharray="4.5 5.5"
           strokeLinecap="round"
           opacity={(hasFlownOnce && !isFlying) || progress > 0.005 ? 0.85 : 0}
-          mask="url(#plane-trail-mask)"
+          mask="url(#plane-trail-mask-1)"
+        />
+
+        {/* Dashed Flight Path Part 2: Loop Exit (Only renders once plane enters segment 5) */}
+        <path
+          d={pathD2}
+          stroke="#1e2c3d"
+          strokeWidth="2.2"
+          strokeDasharray="4.5 5.5"
+          strokeLinecap="round"
+          opacity={(hasFlownOnce && !isFlying) || (progress * pathLength > len1) ? 0.85 : 0}
+          mask="url(#plane-trail-mask-2)"
         />
 
         {/* Flying Paper Airplane with realistic tangent heading & interactive touch */}
