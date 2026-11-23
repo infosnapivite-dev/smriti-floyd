@@ -103,7 +103,7 @@ export default function App() {
       audioRef.current.play().then(() => {
         setIsPlaying(true);
         setIsMuted(false);
-      }).catch(() => {});
+      }).catch(() => { });
       return;
     }
     const nextMuted = !isMuted;
@@ -123,7 +123,7 @@ export default function App() {
 
       <IPhoneFrame>
         <div id="phone-screen-viewport" className="relative w-full h-full bg-[#f4ece1] overflow-hidden">
-          {/* Top Right Floating Music Mute/Unmute Toggle Button */}
+          {/* Top Left Floating Music Mute/Unmute Toggle Button */}
           <AnimatePresence>
             {isOpeningStarted && (
               <motion.button
@@ -139,19 +139,14 @@ export default function App() {
                 title={isMuted ? "Unmute Music (Qaafirana)" : "Mute Music"}
                 style={{
                   top: 'max(14px, env(safe-area-inset-top, 14px))',
-                  right: 'max(14px, env(safe-area-inset-right, 14px))',
+                  left: 'max(14px, env(safe-area-inset-left, 14px))',
                 }}
                 className="absolute z-40 w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-[#fbf8f2]/85 backdrop-blur-md border border-[#c5a059]/60 shadow-lg text-[#183654] hover:bg-[#fbf8f2] hover:border-[#916a3c] hover:text-[#916a3c] transition-all duration-200 cursor-pointer pointer-events-auto"
               >
                 {isMuted ? (
                   <VolumeX className="w-4 h-4 sm:w-[18px] sm:h-[18px] text-[#786f77]" strokeWidth={2.2} />
                 ) : (
-                  <div className="relative flex items-center justify-center">
-                    <Volume2 className="w-4 h-4 sm:w-[18px] sm:h-[18px] text-[#183654]" strokeWidth={2.2} />
-                    {/* Subtle pulsing indicator */}
-                    <span className="absolute -top-1 -right-1 w-1.5 h-1.5 rounded-full bg-[#c5a059] animate-ping opacity-75" />
-                    <span className="absolute -top-1 -right-1 w-1.5 h-1.5 rounded-full bg-[#916a3c]" />
-                  </div>
+                  <Volume2 className="w-4 h-4 sm:w-[18px] sm:h-[18px] text-[#183654]" strokeWidth={2.2} />
                 )}
               </motion.button>
             )}
@@ -161,9 +156,8 @@ export default function App() {
           <main
             id="mockup-scroll-container"
             ref={scrollContainerRef}
-            className={`w-full h-full bg-[#f4ece1] ${
-              isEnvelopeOpen ? 'inner-app-scroll' : 'overflow-hidden pointer-events-none'
-            }`}
+            className={`w-full h-full bg-[#f4ece1] ${isEnvelopeOpen ? 'inner-app-scroll' : 'overflow-hidden pointer-events-none'
+              }`}
           >
             {/* Continuous Page Sections Stack (Zero crop, exact aspect ratio matching mobile screens) */}
             <div className="w-full flex flex-col bg-[#f4ece1]">
@@ -186,8 +180,8 @@ export default function App() {
               <RsvpPage />
 
               {/* Page 8: Last Page / Closing Sunset Terrace */}
-              <LastPage 
-                onScrollToTop={handleScrollToTop} 
+              <LastPage
+                onScrollToTop={handleScrollToTop}
                 onReplayEnvelope={handleReplayEnvelope}
               />
             </div>
@@ -208,12 +202,12 @@ export default function App() {
                   transition: { duration: 0.35, ease: 'easeOut' }
                 }}
               >
-                <EnvelopeOpening 
+                <EnvelopeOpening
                   onOpenStart={() => {
                     setIsOpeningStarted(true);
                     startAudio();
                   }}
-                  onOpenComplete={() => setIsEnvelopeOpen(true)} 
+                  onOpenComplete={() => setIsEnvelopeOpen(true)}
                 />
               </motion.div>
             )}
