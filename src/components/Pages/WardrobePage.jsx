@@ -28,15 +28,6 @@ export default function WardrobePage() {
         >
           Wardrobe Planner
         </motion.h2>
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-          className="font-serif italic text-xs sm:text-[13px] text-[#183654] leading-snug"
-        >
-          Wardrobe details<br />coming soon...
-        </motion.p>
       </div>
 
       {/* "OPEN" Button & Divider (Positioned below the wardrobe cabinet at ~47%) */}
