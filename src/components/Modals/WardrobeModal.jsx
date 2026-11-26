@@ -1,91 +1,209 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import wardrobe1 from '../../assets/wardrobe images/1.jpg.webp';
+import wardrobe2 from '../../assets/wardrobe images/2.jpg.webp';
+import wardrobe3 from '../../assets/wardrobe images/3.jpg.webp';
+import wardrobe4 from '../../assets/wardrobe images/4.jpg.webp';
+import wardrobe5 from '../../assets/wardrobe images/5.jpg.webp';
+
+const wardrobeSlides = [
+  { id: 1, src: wardrobe1, alt: 'Wardrobe Planner - Look 1' },
+  { id: 2, src: wardrobe2, alt: 'Wardrobe Planner - Look 2' },
+  { id: 3, src: wardrobe3, alt: 'Wardrobe Planner - Look 3' },
+  { id: 4, src: wardrobe4, alt: 'Wardrobe Planner - Look 4' },
+  { id: 5, src: wardrobe5, alt: 'Wardrobe Planner - Look 5' },
+];
+
+const variants = {
+  enter: (direction) => ({
+    x: direction > 0 ? '100%' : '-100%',
+    opacity: 0.3,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+    transition: {
+      x: { type: 'spring', stiffness: 300, damping: 30 },
+      opacity: { duration: 0.25 },
+    },
+  },
+  exit: (direction) => ({
+    x: direction < 0 ? '100%' : '-100%',
+    opacity: 0.3,
+    transition: {
+      x: { type: 'spring', stiffness: 300, damping: 30 },
+      opacity: { duration: 0.2 },
+    },
+  }),
+};
+
+const swipeConfidenceThreshold = 10000;
+const swipePower = (offset, velocity) => {
+  return Math.abs(offset) * velocity;
+};
 
 export default function WardrobeModal({ isOpen, onClose }) {
+  const [[page, direction], setPage] = useState([0, 0]);
+
+  // Reset to first slide whenever modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setPage([0, 0]);
+    }
+  }, [isOpen]);
+
+  // Keyboard arrow keys navigation & Escape to close
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowRight') {
+        paginate(1);
+      } else if (e.key === 'ArrowLeft') {
+        paginate(-1);
+      } else if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, page]);
+
   if (!isOpen) return null;
 
-  const themes = [
-    {
-      event: 'Haldi',
-      vibe: 'Sun-kissed florals & breezy cotton/silk',
-      colors: ['#f59e0b', '#fbbf24', '#fef08a'],
-      suggestions: 'Yellow kurtas, floral lehengas, breezy shararas, vibrant dupattas.',
-    },
-    {
-      event: 'Sangeet',
-      vibe: 'Glitz, mirror-work & high glamour',
-      colors: ['#0f172a', '#3b0764', '#f43f5e'],
-      suggestions: 'Tuxedos, metallic sherwanis, sequin lehengas, statement gowns.',
-    },
-    {
-      event: 'Pheras',
-      vibe: 'Regal heritage & auspicious pastels',
-      colors: ['#f43f5e', '#fed7aa', '#c5a059'],
-      suggestions: 'Pastel pinks, blush gold, ivory sherwanis with safa, traditional banarasi weaves.',
-    },
-    {
-      event: 'Reception',
-      vibe: 'Modern classic & formal sophistication',
-      colors: ['#1e293b', '#0369a1', '#e2e8f0'],
-      suggestions: 'Black tie, dark suits, evening gowns, contemporary silk sarees.',
-    },
-  ];
+  const paginate = (newDirection) => {
+    setPage(([prevPage]) => {
+      const next = (prevPage + newDirection + wardrobeSlides.length) % wardrobeSlides.length;
+      return [next, newDirection];
+    });
+  };
+
+  const goToSlide = (targetIndex) => {
+    setPage(([prevPage]) => {
+      const newDirection = targetIndex > prevPage ? 1 : -1;
+      return [targetIndex, newDirection];
+    });
+  };
+
+  const currentSlide = wardrobeSlides[page];
 
   const modalContent = (
     <AnimatePresence>
-      <div className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm pointer-events-auto">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.9, y: 20 }}
-          className="relative w-full max-w-sm max-h-[85vh] overflow-y-auto rounded-2xl p-6 shadow-2xl border border-[#c5a059]/40 bg-[#fbf8f2] text-center"
+      <motion.div
+        key="wardrobe-carousel-full-page"
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.98 }}
+        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        className="absolute inset-0 z-50 w-full h-full bg-[#f4ece1] overflow-hidden select-none pointer-events-auto"
+      >
+        {/* Full-Page Viewport Container Matching Screen Aspect Ratio */}
+        <div 
+          className="relative w-full h-full aspect-[3000/5400] max-h-full mx-auto overflow-hidden bg-[#f4ece1]"
         >
-          {/* Close */}
-          <button
-            onClick={onClose}
-            className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/10 flex items-center justify-center text-[#2c3e50] hover:bg-black/20"
-          >
-            ✕
-          </button>
-
-          <span className="font-serif text-[11px] uppercase tracking-[0.25em] text-[#916a3c] font-semibold block mb-1">
-            Wardrobe Lookbook
-          </span>
-          <h3 className="font-serif text-2xl font-semibold text-[#183654] mb-4">
-            Curated Color Palettes
-          </h3>
-
-          <div className="space-y-4 text-left">
-            {themes.map((t, idx) => (
-              <div key={idx} className="p-3.5 rounded-xl bg-white border border-[#916a3c]/20 shadow-sm">
-                <div className="flex items-center justify-between mb-1.5">
-                  <h4 className="font-serif text-base font-bold text-[#916a3c] uppercase">{t.event}</h4>
-                  <div className="flex gap-1.5">
-                    {t.colors.map((c, i) => (
-                      <span
-                        key={i}
-                        className="w-4 h-4 rounded-full border border-black/10 shadow-inner"
-                        style={{ backgroundColor: c }}
-                        title={c}
-                      />
-                    ))}
-                  </div>
-                </div>
-                <p className="font-serif italic text-xs text-[#183654] mb-1">{t.vibe}</p>
-                <p className="font-serif text-[11px] text-gray-600 leading-snug">{t.suggestions}</p>
-              </div>
-            ))}
+          {/* Sliding Carousel Images */}
+          <div className="relative w-full h-full overflow-hidden">
+            <AnimatePresence initial={false} custom={direction}>
+              <motion.div
+                key={page}
+                custom={direction}
+                variants={variants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={(e, { offset, velocity }) => {
+                  const swipe = swipePower(offset.x, velocity.x);
+                  if (swipe < -swipeConfidenceThreshold) {
+                    paginate(1);
+                  } else if (swipe > swipeConfidenceThreshold) {
+                    paginate(-1);
+                  }
+                }}
+                className="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing flex items-center justify-center"
+              >
+                <img
+                  src={currentSlide.src}
+                  alt={currentSlide.alt}
+                  className="w-full h-full object-fill pointer-events-none select-none"
+                  loading="eager"
+                  decoding="async"
+                />
+              </motion.div>
+            </AnimatePresence>
           </div>
 
+          {/* Left Arrow Button */}
           <button
-            onClick={onClose}
-            className="mt-5 px-6 py-2 rounded-full bg-[#183654] text-white font-serif text-xs tracking-widest uppercase hover:bg-[#916a3c] transition-colors"
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              paginate(-1);
+            }}
+            className="absolute left-3.5 top-1/2 -translate-y-1/2 z-40 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-black/45 hover:bg-black/70 active:scale-90 text-white backdrop-blur-md flex items-center justify-center shadow-lg border border-white/25 transition-all cursor-pointer pointer-events-auto"
+            aria-label="Previous Slide"
+            title="Previous"
           >
-            Got It
+            <ChevronLeft className="w-6 h-6 stroke-[2.2]" />
           </button>
-        </motion.div>
-      </div>
+
+          {/* Right Arrow Button */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              paginate(1);
+            }}
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 z-40 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-black/45 hover:bg-black/70 active:scale-90 text-white backdrop-blur-md flex items-center justify-center shadow-lg border border-white/25 transition-all cursor-pointer pointer-events-auto"
+            aria-label="Next Slide"
+            title="Next"
+          >
+            <ChevronRight className="w-6 h-6 stroke-[2.2]" />
+          </button>
+
+          {/* Top-Right Close 'X' Button */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
+            className="absolute top-4 right-4 z-40 w-10 h-10 rounded-full bg-black/45 hover:bg-black/70 active:scale-90 text-white backdrop-blur-md flex items-center justify-center shadow-lg border border-white/25 transition-all cursor-pointer pointer-events-auto"
+            aria-label="Close"
+            title="Close"
+          >
+            <X className="w-5 h-5 stroke-[2.2]" />
+          </button>
+
+          {/* Bottom Dot Indicators */}
+          <div 
+            className="absolute inset-x-0 flex justify-center items-center z-40 pointer-events-none"
+            style={{ bottom: 'max(8px, env(safe-area-inset-bottom, 8px))' }}
+          >
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/35 backdrop-blur-md border border-white/20 shadow-sm pointer-events-auto">
+              {wardrobeSlides.map((_, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => goToSlide(idx)}
+                  className={`transition-all duration-300 rounded-full cursor-pointer ${
+                    idx === page
+                      ? 'w-4 h-1.5 bg-[#c5a059]'
+                      : 'w-1.5 h-1.5 bg-white/50 hover:bg-white/80'
+                  }`}
+                  aria-label={`Go to wardrobe slide ${idx + 1}`}
+                  title={`Slide ${idx + 1}`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </motion.div>
     </AnimatePresence>
   );
 

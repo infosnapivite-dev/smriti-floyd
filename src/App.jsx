@@ -17,7 +17,12 @@ import pherasFullBg from './assets/pheras.webp';
 import receptionFullBg from './assets/reception.webp';
 import familyBg from './assets/family details page.webp';
 import eventsBg from './assets/5-events page.webp';
-import qaafiranaSong from './assets/Qaafirana.m4a';
+import wardrobe1 from './assets/wardrobe images/1.jpg.webp';
+import wardrobe2 from './assets/wardrobe images/2.jpg.webp';
+import wardrobe3 from './assets/wardrobe images/3.jpg.webp';
+import wardrobe4 from './assets/wardrobe images/4.jpg.webp';
+import wardrobe5 from './assets/wardrobe images/5.jpg.webp';
+import qaafiranaSong from './assets/Qaafirana.mpeg';
 import { preloadImages } from './utils/imagePreloader';
 import './styles/iphone-mockup.css';
 
@@ -30,7 +35,7 @@ export default function App() {
   const lenisRef = useRef(null);
   const audioRef = useRef(null);
 
-  // Silently preload event modal and detail backgrounds in the background on initial load
+  // Silently preload event modal, wardrobe carousel, and detail backgrounds in the background on initial load
   useEffect(() => {
     preloadImages([
       eventsBg,
@@ -39,6 +44,11 @@ export default function App() {
       pherasFullBg,
       receptionFullBg,
       familyBg,
+      wardrobe1,
+      wardrobe2,
+      wardrobe3,
+      wardrobe4,
+      wardrobe5,
     ]);
   }, []);
 
