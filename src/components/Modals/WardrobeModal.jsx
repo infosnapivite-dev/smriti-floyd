@@ -145,11 +145,12 @@ export default function WardrobeModal({ isOpen, onClose }) {
               e.stopPropagation();
               paginate(-1);
             }}
-            className="absolute left-3.5 top-1/2 -translate-y-1/2 z-40 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-black/45 hover:bg-black/70 active:scale-90 text-white backdrop-blur-md flex items-center justify-center shadow-lg border border-white/25 transition-all cursor-pointer pointer-events-auto"
+            className="absolute left-3 sm:left-3.5 -translate-y-1/2 z-40 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black/20 hover:bg-black/40 active:scale-90 text-white/85 hover:text-white backdrop-blur-[2px] flex items-center justify-center shadow-sm border border-white/20 transition-all cursor-pointer pointer-events-auto"
+            style={{ top: 'calc(58% + 20px)' }}
             aria-label="Previous Slide"
             title="Previous"
           >
-            <ChevronLeft className="w-6 h-6 stroke-[2.2]" />
+            <ChevronLeft className="w-5 h-5 sm:w-5.5 sm:h-5.5 stroke-[2]" />
           </button>
 
           {/* Right Arrow Button */}
@@ -159,11 +160,12 @@ export default function WardrobeModal({ isOpen, onClose }) {
               e.stopPropagation();
               paginate(1);
             }}
-            className="absolute right-3.5 top-1/2 -translate-y-1/2 z-40 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-black/45 hover:bg-black/70 active:scale-90 text-white backdrop-blur-md flex items-center justify-center shadow-lg border border-white/25 transition-all cursor-pointer pointer-events-auto"
+            className="absolute right-3 sm:right-3.5 -translate-y-1/2 z-40 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-black/20 hover:bg-black/40 active:scale-90 text-white/85 hover:text-white backdrop-blur-[2px] flex items-center justify-center shadow-sm border border-white/20 transition-all cursor-pointer pointer-events-auto"
+            style={{ top: 'calc(58% + 20px)' }}
             aria-label="Next Slide"
             title="Next"
           >
-            <ChevronRight className="w-6 h-6 stroke-[2.2]" />
+            <ChevronRight className="w-5 h-5 sm:w-5.5 sm:h-5.5 stroke-[2]" />
           </button>
 
           {/* Top-Right Close 'X' Button */}
