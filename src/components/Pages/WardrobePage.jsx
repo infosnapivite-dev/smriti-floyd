@@ -18,7 +18,7 @@ export default function WardrobePage() {
       />
 
       {/* Top Header Text (Positioned above the illustrated wardrobe cabinet) */}
-      <div className="absolute top-[15%] inset-x-0 flex flex-col items-center text-center px-4 desktop-page-overlay">
+      <div className="absolute top-[17%] inset-x-0 flex flex-col items-center text-center px-4 desktop-page-overlay">
         <motion.h2
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
